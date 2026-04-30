@@ -32,26 +32,38 @@ export default function MenuPage({ params }) {
         setBusiness(businessData);
 
         const subscription = businessData.subscription;
-        let active = false;
+let active = false;
 
-        if (
-          subscription &&
-          subscription.status === "active" &&
-          subscription.expiresAt
-        ) {
-          const expiryDate = subscription.expiresAt.toDate
-            ? subscription.expiresAt.toDate()
-            : new Date(subscription.expiresAt);
+if (
+  subscription &&
+  subscription.status === "active" &&
+  subscription.expiresAt
+) {
+  let expiryDate;
 
-          active = expiryDate > new Date();
-        }
+  if (typeof subscription.expiresAt.toDate === "function") {
+    expiryDate = subscription.expiresAt.toDate();
+  } else if (subscription.expiresAt.seconds) {
+    expiryDate = new Date(subscription.expiresAt.seconds * 1000);
+  } else {
+    expiryDate = new Date(subscription.expiresAt);
+  }
 
-        setSubscriptionActive(active);
+  active = expiryDate.getTime() > Date.now();
 
-        if (!active) {
-          setLoading(false);
-          return;
-        }
+  console.log("Subscription expiry:", expiryDate);
+  console.log("Now:", new Date());
+  console.log("Subscription active:", active);
+}
+
+setSubscriptionActive(active);
+
+if (!active) {
+  setItems([]);
+  setCart([]);
+  setLoading(false);
+  return;
+}
 
         const menuSnap = await getDocs(
           collection(db, "businesses", businessId, "menuItems")
