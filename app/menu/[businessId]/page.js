@@ -32,38 +32,34 @@ export default function MenuPage({ params }) {
         setBusiness(businessData);
 
         const subscription = businessData.subscription;
-let active = false;
+        let active = false;
 
-if (
-  subscription &&
-  subscription.status === "active" &&
-  subscription.expiresAt
-) {
-  let expiryDate;
+        if (
+          subscription &&
+          subscription.status === "active" &&
+          subscription.expiresAt
+        ) {
+          let expiryDate;
 
-  if (typeof subscription.expiresAt.toDate === "function") {
-    expiryDate = subscription.expiresAt.toDate();
-  } else if (subscription.expiresAt.seconds) {
-    expiryDate = new Date(subscription.expiresAt.seconds * 1000);
-  } else {
-    expiryDate = new Date(subscription.expiresAt);
-  }
+          if (typeof subscription.expiresAt.toDate === "function") {
+            expiryDate = subscription.expiresAt.toDate();
+          } else if (subscription.expiresAt.seconds) {
+            expiryDate = new Date(subscription.expiresAt.seconds * 1000);
+          } else {
+            expiryDate = new Date(subscription.expiresAt);
+          }
 
-  active = expiryDate.getTime() > Date.now();
+          active = expiryDate.getTime() > Date.now();
+        }
 
-  console.log("Subscription expiry:", expiryDate);
-  console.log("Now:", new Date());
-  console.log("Subscription active:", active);
-}
+        setSubscriptionActive(active);
 
-setSubscriptionActive(active);
-
-if (!active) {
-  setItems([]);
-  setCart([]);
-  setLoading(false);
-  return;
-}
+        if (!active) {
+          setItems([]);
+          setCart([]);
+          setLoading(false);
+          return;
+        }
 
         const menuSnap = await getDocs(
           collection(db, "businesses", businessId, "menuItems")
@@ -146,7 +142,7 @@ if (!active) {
     setCart([
       ...cart,
       {
-        cartId: Date.now(),
+        cartId: Date.now() + Math.random(),
         id: item.id,
         name: item.name,
         size,
@@ -164,7 +160,7 @@ if (!active) {
 
   return (
     <div className="min-h-screen bg-[#0B0907] text-[#F5EBDD] pb-72">
-      <section className="relative h-[330px] md:h-[460px] overflow-hidden bg-black">
+      <section className="relative h-[380px] md:h-[460px] overflow-hidden bg-black">
         {business?.coverUrl && (
           <img
             src={business.coverUrl}
@@ -173,14 +169,14 @@ if (!active) {
           />
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/55 to-[#0B0907]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-[#0B0907]" />
 
-        <div className="absolute top-5 right-5 z-20 flex items-center gap-2 md:gap-3">
+        <div className="absolute top-5 right-4 z-20 flex items-center gap-2 md:gap-3">
           {business?.facebookUrl && (
             <a
               href={business.facebookUrl}
               target="_blank"
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/40 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
+              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/45 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png"
@@ -194,7 +190,7 @@ if (!active) {
             <a
               href={business.instagramUrl}
               target="_blank"
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/40 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
+              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/45 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
@@ -208,7 +204,7 @@ if (!active) {
             <a
               href={business.tiktokUrl}
               target="_blank"
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/40 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
+              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/45 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"
@@ -222,14 +218,14 @@ if (!active) {
             <a
               href={business.googleReviewUrl}
               target="_blank"
-              className="h-10 md:h-11 px-3 md:px-4 rounded-full border border-[#C6A76A]/55 bg-black/40 backdrop-blur-md flex items-center gap-2 shadow-lg hover:scale-105 transition"
+              className="w-10 h-10 md:w-auto md:h-11 md:px-4 rounded-full border border-[#C6A76A]/55 bg-black/45 backdrop-blur-md flex items-center justify-center md:gap-2 shadow-lg hover:scale-105 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
                 alt="Google"
                 className="w-5 h-5 object-contain"
               />
-              <span className="hidden sm:inline text-[10px] md:text-[11px] uppercase tracking-[0.16em] text-[#D8CBB7] font-medium">
+              <span className="hidden md:inline text-[11px] uppercase tracking-[0.16em] text-[#D8CBB7] font-medium">
                 Review
               </span>
             </a>
@@ -239,25 +235,27 @@ if (!active) {
         <div className="absolute left-5 right-5 bottom-12 md:bottom-20 md:left-12">
           <div className="flex items-center gap-4 md:gap-6">
             {business?.logoUrl ? (
-              <img
-                src={business.logoUrl}
-                alt=""
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border border-[#D8CBB7] shadow-2xl"
-              />
+              <div className="relative shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-[#D8CBB7] shadow-2xl bg-[#211914]">
+                <img
+                  src={business.logoUrl}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
             ) : (
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border border-[#D8CBB7] shadow-2xl bg-[#211914] flex items-center justify-center text-4xl">
+              <div className="shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-[#D8CBB7] shadow-2xl bg-[#211914] flex items-center justify-center text-4xl">
                 🍽️
               </div>
             )}
 
-            <div className="w-px h-24 md:h-32 bg-[#D8CBB7]/70" />
+            <div className="shrink-0 w-px h-24 md:h-32 bg-[#D8CBB7]/70" />
 
-            <div className="min-w-0">
-              <h1 className="text-[#D6B56D] text-3xl md:text-6xl font-semibold leading-none tracking-tight">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-[#D6B56D] text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight tracking-tight break-words">
                 {business?.businessName}
               </h1>
 
-              <p className="mt-3 text-[#F5EBDD] uppercase tracking-[0.12em] text-lg md:text-3xl font-medium leading-tight">
+              <p className="mt-2 md:mt-3 text-[#F5EBDD] uppercase tracking-[0.12em] text-lg md:text-3xl font-medium leading-tight">
                 Signature Dining Experience
               </p>
 
@@ -269,13 +267,13 @@ if (!active) {
         </div>
       </section>
 
-      <nav className="sticky top-0 z-50 bg-[#0B0907]/90 backdrop-blur-xl border-b border-[#C6A76A]/15">
-        <div className="max-w-5xl mx-auto flex gap-3 overflow-x-auto px-4 py-4">
+      <nav className="sticky top-0 z-50 bg-[#0B0907]/92 backdrop-blur-xl border-b border-[#C6A76A]/15">
+        <div className="max-w-5xl mx-auto flex gap-3 overflow-x-auto px-4 py-4 scrollbar-hide">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-medium border transition ${
+              className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold border transition ${
                 activeCategory === category
                   ? "bg-[#C6A76A] text-[#0B0907] border-[#C6A76A]"
                   : "bg-transparent text-[#D8CBB7] border-[#3A2F20]"
@@ -293,7 +291,7 @@ if (!active) {
             <p className="uppercase tracking-[0.25em] text-[#C6A76A] text-xs">
               Category
             </p>
-            <h2 className="text-3xl md:text-4xl font-semibold mt-2">
+            <h2 className="text-4xl md:text-5xl font-semibold mt-2">
               {activeCategory}
             </h2>
           </div>
@@ -315,7 +313,7 @@ if (!active) {
               return (
                 <article
                   key={item.id}
-                  className={`rounded-[28px] border border-[#C6A76A]/15 bg-[#15110D] overflow-hidden ${
+                  className={`rounded-[28px] border border-[#C6A76A]/15 bg-[#15110D] overflow-hidden shadow-xl ${
                     soldOut ? "opacity-60" : ""
                   }`}
                 >
@@ -358,10 +356,10 @@ if (!active) {
                             onClick={() =>
                               addToCart(item, "Normal", item.normalPrice)
                             }
-                            className={`rounded-full px-4 py-2 text-xs font-bold border ${
+                            className={`rounded-full px-4 py-2 text-xs font-bold border transition ${
                               soldOut
                                 ? "bg-gray-800 border-gray-700 text-gray-500"
-                                : "bg-transparent border-[#C6A76A] text-[#C6A76A]"
+                                : "bg-transparent border-[#C6A76A] text-[#C6A76A] active:scale-95"
                             }`}
                           >
                             Normal · Rs {item.normalPrice}
@@ -372,10 +370,10 @@ if (!active) {
                             onClick={() =>
                               addToCart(item, "Full", item.fullPrice)
                             }
-                            className={`rounded-full px-4 py-2 text-xs font-bold border ${
+                            className={`rounded-full px-4 py-2 text-xs font-bold border transition ${
                               soldOut
                                 ? "bg-gray-800 border-gray-700 text-gray-500"
-                                : "bg-transparent border-[#C6A76A] text-[#C6A76A]"
+                                : "bg-transparent border-[#C6A76A] text-[#C6A76A] active:scale-95"
                             }`}
                           >
                             Full · Rs {item.fullPrice}
@@ -392,10 +390,10 @@ if (!active) {
                             onClick={() =>
                               addToCart(item, "Single", item.price)
                             }
-                            className={`rounded-full px-5 py-2 text-xs font-bold border ${
+                            className={`rounded-full px-5 py-2 text-xs font-bold border transition ${
                               soldOut
                                 ? "bg-gray-800 border-gray-700 text-gray-500"
-                                : "bg-transparent border-[#C6A76A] text-[#C6A76A]"
+                                : "bg-transparent border-[#C6A76A] text-[#C6A76A] active:scale-95"
                             }`}
                           >
                             {soldOut ? "Unavailable" : "Select"}
@@ -434,14 +432,14 @@ if (!active) {
               {cart.map((item) => (
                 <div
                   key={item.cartId}
-                  className="flex justify-between items-center text-sm bg-[#15110D] border border-[#C6A76A]/10 rounded-xl px-3 py-2"
+                  className="flex justify-between items-center gap-3 text-sm bg-[#15110D] border border-[#C6A76A]/10 rounded-xl px-3 py-2"
                 >
-                  <span>
+                  <span className="min-w-0 truncate">
                     {item.name}{" "}
                     <span className="text-[#F5EBDD]/45">({item.size})</span>
                   </span>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 shrink-0">
                     <span className="font-semibold text-[#C6A76A]">
                       Rs {item.price}
                     </span>
