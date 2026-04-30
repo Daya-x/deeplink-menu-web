@@ -160,7 +160,7 @@ export default function MenuPage({ params }) {
 
   return (
     <div className="min-h-screen bg-[#0B0907] text-[#F5EBDD] pb-72">
-      <section className="relative h-[380px] md:h-[460px] overflow-hidden bg-black">
+      <section className="relative h-[420px] md:h-[500px] overflow-hidden bg-black">
         {business?.coverUrl && (
           <img
             src={business.coverUrl}
@@ -169,14 +169,15 @@ export default function MenuPage({ params }) {
           />
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-[#0B0907]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/70 to-[#0B0907]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.35)_70%)]" />
 
-        <div className="absolute top-5 right-4 z-20 flex items-center gap-2 md:gap-3">
+        <div className="absolute top-5 right-4 z-20 flex items-center gap-2">
           {business?.facebookUrl && (
             <a
               href={business.facebookUrl}
               target="_blank"
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/45 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
+              className="w-10 h-10 rounded-full border border-[#D8CBB7]/35 bg-black/45 backdrop-blur-xl flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.45)] active:scale-95 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png"
@@ -190,7 +191,7 @@ export default function MenuPage({ params }) {
             <a
               href={business.instagramUrl}
               target="_blank"
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/45 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
+              className="w-10 h-10 rounded-full border border-[#D8CBB7]/35 bg-black/45 backdrop-blur-xl flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.45)] active:scale-95 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
@@ -204,7 +205,7 @@ export default function MenuPage({ params }) {
             <a
               href={business.tiktokUrl}
               target="_blank"
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full border border-[#D8CBB7]/45 bg-black/45 backdrop-blur-md flex items-center justify-center shadow-lg hover:scale-110 transition"
+              className="w-10 h-10 rounded-full border border-[#D8CBB7]/35 bg-black/45 backdrop-blur-xl flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.45)] active:scale-95 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"
@@ -218,7 +219,7 @@ export default function MenuPage({ params }) {
             <a
               href={business.googleReviewUrl}
               target="_blank"
-              className="w-10 h-10 md:w-auto md:h-11 md:px-4 rounded-full border border-[#C6A76A]/55 bg-black/45 backdrop-blur-md flex items-center justify-center md:gap-2 shadow-lg hover:scale-105 transition"
+              className="w-10 h-10 md:w-auto md:px-4 rounded-full border border-[#C6A76A]/55 bg-black/45 backdrop-blur-xl flex items-center justify-center md:gap-2 shadow-[0_8px_30px_rgba(0,0,0,0.45)] active:scale-95 transition"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
@@ -233,9 +234,9 @@ export default function MenuPage({ params }) {
         </div>
 
         <div className="absolute left-5 right-5 bottom-12 md:bottom-20 md:left-12">
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-4 md:gap-7">
             {business?.logoUrl ? (
-              <div className="relative shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-[#D8CBB7] shadow-2xl bg-[#211914]">
+              <div className="relative shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-[#D8CBB7] shadow-[0_0_32px_rgba(198,167,106,0.35)] bg-[#211914]">
                 <img
                   src={business.logoUrl}
                   alt=""
@@ -243,23 +244,23 @@ export default function MenuPage({ params }) {
                 />
               </div>
             ) : (
-              <div className="shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-[#D8CBB7] shadow-2xl bg-[#211914] flex items-center justify-center text-4xl">
+              <div className="shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-[#D8CBB7] shadow-[0_0_32px_rgba(198,167,106,0.35)] bg-[#211914] flex items-center justify-center text-3xl">
                 🍽️
               </div>
             )}
 
-            <div className="shrink-0 w-px h-24 md:h-32 bg-[#D8CBB7]/70" />
+            <div className="shrink-0 w-px h-24 md:h-32 bg-[#D8CBB7]/60" />
 
             <div className="min-w-0 flex-1">
-              <h1 className="text-[#D6B56D] text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight tracking-tight break-words">
+              <h1 className="text-[#D6B56D] text-[34px] sm:text-4xl md:text-6xl font-semibold leading-[0.95] tracking-tight break-words drop-shadow-lg">
                 {business?.businessName}
               </h1>
 
-              <p className="mt-2 md:mt-3 text-[#F5EBDD] uppercase tracking-[0.12em] text-lg md:text-3xl font-medium leading-tight">
+              <p className="mt-3 text-[#F5EBDD] uppercase tracking-[0.18em] text-[18px] md:text-3xl font-medium leading-tight">
                 Signature Dining Experience
               </p>
 
-              <p className="mt-3 text-[#F5EBDD]/80 uppercase tracking-[0.34em] text-xs md:text-sm font-medium">
+              <p className="mt-3 text-[#F5EBDD]/75 uppercase tracking-[0.36em] text-[11px] md:text-sm font-medium">
                 Digital Menu
               </p>
             </div>
@@ -267,16 +268,16 @@ export default function MenuPage({ params }) {
         </div>
       </section>
 
-      <nav className="sticky top-0 z-50 bg-[#0B0907]/92 backdrop-blur-xl border-b border-[#C6A76A]/15">
-        <div className="max-w-5xl mx-auto flex gap-3 overflow-x-auto px-4 py-4 scrollbar-hide">
+      <nav className="sticky top-0 z-50 bg-[#0B0907]/82 backdrop-blur-2xl border-b border-[#C6A76A]/15">
+        <div className="max-w-5xl mx-auto flex gap-3 overflow-x-auto px-4 py-4">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold border transition ${
+              className={`whitespace-nowrap rounded-full px-6 py-3 text-sm font-semibold border transition active:scale-95 ${
                 activeCategory === category
-                  ? "bg-[#C6A76A] text-[#0B0907] border-[#C6A76A]"
-                  : "bg-transparent text-[#D8CBB7] border-[#3A2F20]"
+                  ? "bg-[#D6B56D] text-[#0B0907] border-[#D6B56D] shadow-[0_8px_25px_rgba(214,181,109,0.25)]"
+                  : "bg-[#15110D]/80 text-[#D8CBB7] border-[#3A2F20]"
               }`}
             >
               {category}
@@ -288,10 +289,10 @@ export default function MenuPage({ params }) {
       <main className="max-w-5xl mx-auto px-4 py-10 md:px-6">
         <div className="flex items-end justify-between mb-7">
           <div>
-            <p className="uppercase tracking-[0.25em] text-[#C6A76A] text-xs">
+            <p className="uppercase tracking-[0.28em] text-[#C6A76A] text-xs">
               Category
             </p>
-            <h2 className="text-4xl md:text-5xl font-semibold mt-2">
+            <h2 className="text-4xl md:text-5xl font-semibold mt-2 text-[#FFF7E8]">
               {activeCategory}
             </h2>
           </div>
@@ -302,7 +303,7 @@ export default function MenuPage({ params }) {
         </div>
 
         {filteredItems.length === 0 ? (
-          <div className="rounded-[28px] border border-[#C6A76A]/15 bg-[#15110D] p-8 text-center">
+          <div className="rounded-[28px] border border-[#C6A76A]/15 bg-[#15110D] p-8 text-center shadow-[0_12px_45px_rgba(0,0,0,0.45)]">
             <p className="text-[#F5EBDD]/55">No items available.</p>
           </div>
         ) : (
@@ -313,7 +314,7 @@ export default function MenuPage({ params }) {
               return (
                 <article
                   key={item.id}
-                  className={`rounded-[28px] border border-[#C6A76A]/15 bg-[#15110D] overflow-hidden shadow-xl ${
+                  className={`rounded-[30px] border border-[#C6A76A]/15 bg-[#15110D] overflow-hidden shadow-[0_14px_45px_rgba(0,0,0,0.55)] transition active:scale-[0.99] ${
                     soldOut ? "opacity-60" : ""
                   }`}
                 >
@@ -359,7 +360,7 @@ export default function MenuPage({ params }) {
                             className={`rounded-full px-4 py-2 text-xs font-bold border transition ${
                               soldOut
                                 ? "bg-gray-800 border-gray-700 text-gray-500"
-                                : "bg-transparent border-[#C6A76A] text-[#C6A76A] active:scale-95"
+                                : "bg-transparent border-[#D6B56D] text-[#E6C78F] active:scale-95"
                             }`}
                           >
                             Normal · Rs {item.normalPrice}
@@ -373,7 +374,7 @@ export default function MenuPage({ params }) {
                             className={`rounded-full px-4 py-2 text-xs font-bold border transition ${
                               soldOut
                                 ? "bg-gray-800 border-gray-700 text-gray-500"
-                                : "bg-transparent border-[#C6A76A] text-[#C6A76A] active:scale-95"
+                                : "bg-transparent border-[#D6B56D] text-[#E6C78F] active:scale-95"
                             }`}
                           >
                             Full · Rs {item.fullPrice}
@@ -381,7 +382,7 @@ export default function MenuPage({ params }) {
                         </div>
                       ) : (
                         <div className="mt-5 flex items-center justify-between gap-3">
-                          <p className="font-semibold text-[#C6A76A] text-xl">
+                          <p className="font-semibold text-[#E6C78F] text-xl">
                             Rs {item.price}
                           </p>
 
@@ -393,7 +394,7 @@ export default function MenuPage({ params }) {
                             className={`rounded-full px-5 py-2 text-xs font-bold border transition ${
                               soldOut
                                 ? "bg-gray-800 border-gray-700 text-gray-500"
-                                : "bg-transparent border-[#C6A76A] text-[#C6A76A] active:scale-95"
+                                : "bg-transparent border-[#D6B56D] text-[#E6C78F] active:scale-95"
                             }`}
                           >
                             {soldOut ? "Unavailable" : "Select"}
@@ -413,13 +414,13 @@ export default function MenuPage({ params }) {
         <p className="text-[10px] uppercase tracking-[0.35em] text-[#F5EBDD]/40">
           Powered by
         </p>
-        <p className="mt-2 text-sm uppercase tracking-[0.4em] text-[#C6A76A] font-semibold">
+        <p className="mt-2 text-sm uppercase tracking-[0.4em] text-[#D6B56D] font-semibold">
           DeepLink
         </p>
       </footer>
 
       {cart.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0B0907]/95 backdrop-blur-xl border-t border-[#C6A76A]/20 shadow-2xl">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0B0907]/96 backdrop-blur-2xl border-t border-[#C6A76A]/20 shadow-[0_-12px_45px_rgba(0,0,0,0.85)] rounded-t-[28px]">
           <div className="max-w-5xl mx-auto p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-lg">Selected Items</h3>
@@ -440,7 +441,7 @@ export default function MenuPage({ params }) {
                   </span>
 
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="font-semibold text-[#C6A76A]">
+                    <span className="font-semibold text-[#E6C78F]">
                       Rs {item.price}
                     </span>
 
@@ -458,7 +459,7 @@ export default function MenuPage({ params }) {
             <div className="border-t border-[#C6A76A]/15 mt-4 pt-4 space-y-3">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-xl">Total</span>
-                <span className="font-bold text-2xl text-[#C6A76A]">
+                <span className="font-bold text-2xl text-[#E6C78F]">
                   Rs {total}
                 </span>
               </div>
@@ -466,7 +467,7 @@ export default function MenuPage({ params }) {
               {!splitEnabled && (
                 <button
                   onClick={() => setSplitEnabled(true)}
-                  className="w-full rounded-2xl border border-[#C6A76A]/25 bg-[#15110D] px-4 py-3 font-semibold text-[#C6A76A]"
+                  className="w-full rounded-2xl border border-[#C6A76A]/25 bg-[#15110D] px-4 py-3 font-semibold text-[#E6C78F] active:scale-95 transition"
                 >
                   Split Amount
                 </button>
@@ -500,7 +501,7 @@ export default function MenuPage({ params }) {
                       Per Person ({splitCount})
                     </span>
 
-                    <span className="text-xl font-bold text-[#C6A76A]">
+                    <span className="text-xl font-bold text-[#E6C78F]">
                       Rs {perPerson.toFixed(2)}
                     </span>
                   </div>
