@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DeepLink Menu Web
 
-## Getting Started
+Customer-facing digital restaurant menus built with Next.js, React, Tailwind
+CSS, and Firebase Firestore.
 
-First, run the development server:
+## Routes
+
+- `/` — DeepLink landing page
+- `/menu/[businessId]` — a restaurant's live menu
+
+## Firestore data
+
+The menu reads:
+
+- `businesses/{businessId}`
+- `businesses/{businessId}/menuItems`
+
+A business must have `subscription.status` set to `active` and an unexpired
+`subscription.expiresAt` value before its menu is displayed.
+
+The browser-side subscription check is a presentation control, not a security
+boundary. The included `firestore.rules` independently restrict menu-item reads
+to active subscriptions, block public business collection enumeration, and
+preserve authenticated owner access.
+
+## Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Quality checks
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+npm run lint
+npm test
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Validate and deploy the Firestore rules with the Firebase CLI:
 
-## Learn More
+```bash
+firebase emulators:exec --only firestore "npm test"
+firebase emulators:exec --only firestore "npm run test:rules"
+firebase deploy --only firestore:rules
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The Firebase web configuration in `lib/firebase.js` identifies the public
+Firebase project. Firebase web API keys are not server secrets; access control
+must be implemented with Firestore Security Rules and, where appropriate,
+Firebase App Check.

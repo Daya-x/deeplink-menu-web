@@ -1,0 +1,147 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(businessId) {
+      return isSignedIn() && request.auth.uid == businessId;
+    }
+
+    function isSuperAdmin() {
+      return isSignedIn() &&
+        request.auth.uid == 'u8fwPxUGESfVGeeQzuVbpkDSWWi1';
+    }
+
+    function businessDocument(businessId) {
+      return get(
+        /databases/$(database)/documents/businesses/$(businessId)
+      );
+    }
+
+    function hasActiveSubscription(businessId) {
+      let business = businessDocument(businessId);
+      return business.data.subscription.status == 'active' &&
+        business.data.subscription.expiresAt > request.time;
+    }
+
+    function changesOnlyBusinessProfile() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'businessName',
+        'ownerName',
+        'logoUrl',
+        'coverUrl',
+        'facebookUrl',
+        'instagramUrl',
+        'tiktokUrl',
+        'googleReviewUrl',
+        'email',
+        'updatedAt'
+      ]);
+    }
+
+    function activatesValidTrial() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let subscription = request.resource.data.subscription;
+      return changed.hasOnly(['trialUsed', 'subscription', 'updatedAt']) &&
+        resource.data.trialUsed == false &&
+        request.resource.data.trialUsed == true &&
+        subscription.status == 'active' &&
+        subscription.plan == 'one_day' &&
+        subscription.lastPaymentId == 'free_trial' &&
+        subscription.expiresAt > request.time &&
+        subscription.expiresAt <= request.time + duration.value(25, 'h');
+    }
+
+    function marksExpiredSubscription() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let subscriptionChanges = request.resource.data.subscription
+        .diff(resource.data.subscription)
+        .affectedKeys();
+      return changed.hasOnly(['subscription', 'updatedAt']) &&
+        subscriptionChanges.hasOnly(['status']) &&
+        resource.data.subscription.expiresAt <= request.time &&
+        request.resource.data.subscription.status == 'expired';
+    }
+
+    function activatesPaidSubscription() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let subscription = request.resource.data.subscription;
+      let oldCode = get(
+        /databases/$(database)/documents/paymentCodes/$(subscription.lastPaymentId)
+      );
+      let usedCode = getAfter(
+        /databases/$(database)/documents/paymentCodes/$(subscription.lastPaymentId)
+      );
+      return changed.hasOnly(['subscription', 'updatedAt']) &&
+        subscription.status == 'active' &&
+        subscription.plan in ['six_months', 'one_year'] &&
+        subscription.expiresAt > request.time &&
+        oldCode.data.status == 'unused' &&
+        usedCode.data.status == 'used' &&
+        usedCode.data.usedBy == request.auth.uid &&
+        usedCode.data.usedAt == request.time &&
+        usedCode.data.plan == subscription.plan &&
+        (
+          (
+            subscription.plan == 'six_months' &&
+            subscription.expiresAt <= request.time + duration.value(550, 'd')
+          ) ||
+          (
+            subscription.plan == 'one_year' &&
+            subscription.expiresAt <= request.time + duration.value(735, 'd')
+          )
+        );
+    }
+
+    match /businesses/{businessId} {
+      // Public menu links can fetch one known restaurant, but cannot enumerate
+      // every business record in the project.
+      allow get: if true;
+      allow list: if false;
+
+      allow create: if isOwner(businessId) &&
+        request.resource.data.trialUsed == false &&
+        !('subscription' in request.resource.data);
+
+      allow update: if isOwner(businessId) && (
+        changesOnlyBusinessProfile() ||
+        activatesValidTrial() ||
+        marksExpiredSubscription() ||
+        activatesPaidSubscription()
+      );
+
+      allow delete: if isOwner(businessId);
+
+      match /menuItems/{itemId} {
+        allow read: if isOwner(businessId) ||
+          hasActiveSubscription(businessId);
+        allow write: if isOwner(businessId);
+      }
+
+      match /categories/{categoryId} {
+        allow read, write: if isOwner(businessId);
+      }
+    }
+
+    match /paymentCodes/{codeId} {
+      allow get: if isSignedIn();
+      allow list: if isSuperAdmin();
+      allow create, delete: if isSuperAdmin();
+      allow update: if isSuperAdmin() || (
+        isSignedIn() &&
+        resource.data.status == 'unused' &&
+        request.resource.data.status == 'used' &&
+        request.resource.data.usedBy == request.auth.uid &&
+        request.resource.data.usedAt == request.time &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status',
+          'usedBy',
+          'usedAt'
+        ])
+      );
+    }
+  }
+}
