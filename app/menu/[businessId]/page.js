@@ -234,10 +234,11 @@ export default function MenuPage({ params }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {filteredItems.map((item) => (
+            {filteredItems.map((item, index) => (
               <MenuItemCard
                 key={item.id}
                 item={item}
+                priority={index === 0}
                 onSelect={(size, price) => addToCart(item, size, price)}
               />
             ))}

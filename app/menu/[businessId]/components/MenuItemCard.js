@@ -29,7 +29,7 @@ function PriceButton({ soldOut, price, label, onSelect }) {
   );
 }
 
-export default function MenuItemCard({ item, onSelect }) {
+export default function MenuItemCard({ item, onSelect, priority = false }) {
   const soldOut = item.isAvailable === false;
   const imageUrl = safeImageUrl(item.image);
   const singlePrice = parseMenuPrice(item.price);
@@ -47,6 +47,7 @@ export default function MenuItemCard({ item, onSelect }) {
               src={imageUrl}
               alt={item.name || "Menu item"}
               fill
+              priority={priority}
               sizes="(min-width: 768px) 144px, 112px"
               className="object-cover rounded-[22px]"
             />
